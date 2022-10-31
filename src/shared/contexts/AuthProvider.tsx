@@ -25,7 +25,7 @@ export interface AuthContextModel {
     user: User | null;
     signIn: (email: string, password: string) => Promise<UserCredential>;
     signUp: (email: string, password: string) => Promise<UserCredential>;
-    sendPasswordResetEmail?: (email: string) => Promise<void>;
+    resetPassword: (email: string) => Promise<void>;
 }
 
 export const AuthContext = React.createContext<AuthContextModel>({} as AuthContextModel);
@@ -47,6 +47,7 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
     function resetPassword(email: string): Promise<void> {
         return sendPasswordResetEmail(auth, email);
     }
+
     useEffect(() => {
         //function that firebase notifies you if a user is set
         const unsubsrcibe = auth.onAuthStateChanged(user => {
