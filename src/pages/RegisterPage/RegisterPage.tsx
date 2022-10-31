@@ -1,16 +1,9 @@
-import { Box, Center, Flex, Spacer, Text, useBoolean } from "@chakra-ui/react";
+import { Box, Center, Flex, Spacer, Text } from "@chakra-ui/react";
 import { Button, Card, InputText, Password } from "primereact";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../config/firebase";
-import { AuthProvider, useAuth } from "../../shared/contexts/AuthProvider";
+import { useAuth } from "../../shared/contexts/AuthProvider";
 import { addTranslationsToPtBrOnPage } from "../../config/traducoes";
-
-interface SignUpFormValues {
-    email: string;
-    password: string;
-}
 
 export const RegisterPage = () => {
     const { signUp } = useAuth();
