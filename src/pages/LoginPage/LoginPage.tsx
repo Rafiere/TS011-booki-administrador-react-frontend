@@ -1,32 +1,28 @@
-import { Box, Center, Flex, HStack, Spacer, Text, VStack } from "@chakra-ui/react";
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
-import { addLocale, Button, Card, InputText, locale, Password } from "primereact";
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import traducoes from "../../config/traducoes.json";
-import { auth } from "../../config/firebase";
+import { Box, Center, Flex, HStack, Spacer, Text } from "@chakra-ui/react";
+import { Button, Card, InputText, Password } from "primereact";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { addTranslationsToPtBrOnPage } from "../../config/traducoes";
-
-async function login(email: string, password: string) {
-    try {
-        const user = await signInWithEmailAndPassword(auth, email, password);
-    } catch (error) {
-        //
-    }
-}
+import { useAuth } from "../../shared/contexts/AuthProvider";
 
 export const LoginPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [user, setUser] = useState({});
+
+    const navigator = useNavigate();
+
+    const { signIn } = useAuth();
 
     addTranslationsToPtBrOnPage();
 
-    // onAuthStateChanged(auth, currentUser => {
-    //     setUser(currentUser);
-    // });
-
-    login(email, password);
+    async function logar() {
+        try {
+            await signIn(email, password);
+            navigator("/livros");
+        } catch (error: unknown) {
+            console.log(error);
+        }
+    }
 
     return (
         <Center>
@@ -48,7 +44,7 @@ export const LoginPage = () => {
                         <Text>
                             <Link to="/esqueci-a-senha"> Esqueci a senha </Link>
                         </Text>
-                        <Button label="Logar" aria-label="Submit" className="p-button-md mt-2" />
+                        <Button label="Logar" aria-label="Submit" className="p-button-md mt-2" onClick={logar} />
                     </Flex>
                 </Card>
             </Box>
