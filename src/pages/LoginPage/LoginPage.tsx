@@ -1,19 +1,32 @@
 import { Box, Center, Flex, HStack, Spacer, Text, VStack } from "@chakra-ui/react";
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import { addLocale, Button, Card, InputText, locale, Password } from "primereact";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import traducoes from "../../config/traducoes.json";
+import { auth } from "../../config/firebase";
+import { addTranslationsToPtBrOnPage } from "../../config/traducoes";
+
+async function login(email: string, password: string) {
+    try {
+        const user = await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+        //
+    }
+}
 
 export const LoginPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [user, setUser] = useState({});
 
-    useEffect(() => {
-        addLocale("pt", traducoes.pt);
+    addTranslationsToPtBrOnPage();
 
-        locale("pt");
-        console.log("testando");
-    }, []);
+    // onAuthStateChanged(auth, currentUser => {
+    //     setUser(currentUser);
+    // });
+
+    login(email, password);
 
     return (
         <Center>
