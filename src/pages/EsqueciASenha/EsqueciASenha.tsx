@@ -1,10 +1,11 @@
-import { Center, Flex, Spacer, Text } from "@chakra-ui/react";
-import { addLocale, Button, Card, InputText, locale } from "primereact";
+import { Center, InputGroup, Spacer, Text, Button, Input, InputLeftElement, Flex, Box } from "@chakra-ui/react";
+import { addLocale, Card, InputText, locale } from "primereact";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import pt from "../../config/traducoes.json";
 import { addTranslationsToPtBrOnPage } from "../../config/traducoes";
 import { useAuth } from "../../shared/contexts/AuthProvider";
+import { EmailIcon } from "@chakra-ui/icons";
 
 export const EsqueciASenha = () => {
     const [email, setEmail] = useState("");
@@ -26,22 +27,20 @@ export const EsqueciASenha = () => {
         <Center>
             <Card>
                 <Center>
-                    <h2>Recuperar Senha</h2>
+                    <Text fontSize={30} marginBottom="2rem">
+                        Recuperar Senha
+                    </Text>
                 </Center>
-                <Flex direction="column">
-                    <h5>Digite o seu email</h5>
-                    <InputText placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} className="box" />
-                    <Spacer />
-                    <Button
-                        label="Recuperar a Senha"
-                        aria-label="Recuperar a Senha"
-                        className="p-button-md mt-5"
-                        onClick={recoverPassword}
-                    />
-                    <Link to="/pagina-inicial" className="mt-5">
-                        Voltar
-                    </Link>
-                </Flex>
+                <InputGroup marginBottom="2rem">
+                    <InputLeftElement pointerEvents="none" children={<EmailIcon color="gray.300" />} />
+                    <Input placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} className="box" />
+                    <Button aria-label="Recuperar a Senha" onClick={recoverPassword} marginLeft="0.5rem">
+                        Enviar
+                    </Button>
+                </InputGroup>
+                <Link to="/pagina-inicial" className="font-bold">
+                    Voltar
+                </Link>
             </Card>
         </Center>
     );
