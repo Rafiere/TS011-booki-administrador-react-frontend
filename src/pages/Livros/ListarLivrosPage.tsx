@@ -18,6 +18,8 @@ import {
 import { Button, Card, Dropdown, FileUpload, InputText, InputTextarea, Menubar } from "primereact";
 import { useRef } from "react";
 import { getStorage } from "firebase/storage";
+import { useNavigate } from "react-router-dom";
+import firebase from "firebase/compat/app";
 
 type LivrosProps = {
     nome: string;
@@ -25,7 +27,7 @@ type LivrosProps = {
 };
 
 export const ListarLivrosPage = () => {
-    const storage = getStorage();
+    const storage = firebase.storage();
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     const menu = useRef(null);
@@ -60,6 +62,37 @@ export const ListarLivrosPage = () => {
             capaUrl: "https://m.media-amazon.com/images/I/51tAD6LyZ-L.jpg",
         },
     ];
+
+    const navigator = useNavigate();
+
+    async function logout() {
+        try {
+            navigator("/login");
+        } catch (error: unknown) {
+            console.log(error);
+        }
+    }
+
+    function handleFirebaseUpload() {
+        console.log("start of upload");
+        // async magic goes here...
+        // const uploadTask = storage.ref(`/images/${imageAsFile.name}`).put(imageAsFile);
+        //initiates the firebase side uploading
+        // uploadTask.on(
+        //     "state_changed",
+        //     () => {
+        //         // gets the functions from storage refences the image storage in firebase by the children
+        //         // gets the download url then sets the image from firebase as the value for the imgUrl key:
+        //         storage
+        //             .ref("images")
+        //             .child(imageAsFile.name)
+        //             .getDownloadURL()
+        //             .then(fireBaseUrl => {
+        //                 setImageAsUrl(prevObject => ({ ...prevObject, imgUrl: fireBaseUrl }));
+        //             });
+        //     },
+        // );
+    }
 
     return (
         <Flex display="block">
@@ -151,7 +184,7 @@ export const ListarLivrosPage = () => {
                                 className="bg-green-600 border-green-600 mr-4"
                                 onClick={onOpen}
                             />
-                            <Button label="Logout" icon="pi pi-power-off" className="bg-red-600 border-red-600" />
+                            <Button label="Logout" icon="pi pi-power-off" className="bg-red-600 border-red-600" onClick={logout} />
                         </SimpleGrid>
                     }
                     className="p-menuitem-text font-bold p-menuitem gap-5"
