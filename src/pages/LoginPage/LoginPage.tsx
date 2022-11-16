@@ -23,7 +23,8 @@ export const LoginPage = () => {
 
     async function logar() {
         try {
-            if ((await (await signIn(email, password)).user.getIdTokenResult()).claims["admin"]) navigator("/livros");
+            if ((await (await signIn(email, password)).user.getIdTokenResult()).claims["admin"]) navigator("/livros")
+            else console.log("Usuario não autorizado");
         } catch (error: unknown) {
             console.log(error);
         }
