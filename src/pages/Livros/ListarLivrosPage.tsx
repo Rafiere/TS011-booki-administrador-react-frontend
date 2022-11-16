@@ -20,7 +20,7 @@ import { useRef } from "react";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 import firebase from "firebase/compat/app";
-import { storage } from "../../config/firebase";
+import { auth, storage } from "../../config/firebase";
 
 type LivrosProps = {
     nome: string;
@@ -77,7 +77,8 @@ export const ListarLivrosPage = () => {
         }
     }
 
-    function submit() {
+    async function submit() {
+        const bearerToken = await auth.currentUser?.getIdToken();
         // Post metadata to api and retrieve the ID
         const bookId = "";
 
