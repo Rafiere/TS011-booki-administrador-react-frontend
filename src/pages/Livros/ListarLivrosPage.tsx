@@ -27,7 +27,7 @@ type LivrosProps = {
 };
 
 export const ListarLivrosPage = () => {
-    const storage = firebase.storage();
+    // const storage = firebase.storage();
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     const menu = useRef(null);
