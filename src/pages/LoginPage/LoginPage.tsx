@@ -1,6 +1,6 @@
 import { EmailIcon, LockIcon } from "@chakra-ui/icons";
-import { Box, Button, Center, Flex, HStack, Input, InputGroup, InputLeftElement, InputRightElement, Spacer, Text } from "@chakra-ui/react";
-import { Card, InputText, Password } from "primereact";
+import { Box, Button, Center, Flex, Input, InputGroup, InputLeftElement, InputRightElement, Text, useDisclosure } from "@chakra-ui/react";
+import { Card } from "primereact";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { addTranslationsToPtBrOnPage } from "../../config/traducoes";
@@ -17,18 +17,18 @@ export const LoginPage = () => {
 
     addTranslationsToPtBrOnPage();
 
+    const handleClick = () => {
+        setShow(!show);
+    };
+
     async function logar() {
         try {
-            await signIn(email, password);
-            navigator("/livros");
+            if ((await (await signIn(email, password)).user.getIdTokenResult()).claims["admin"]) navigator("/livros")
+            else console.log("Usuario não autorizado");
         } catch (error: unknown) {
             console.log(error);
         }
     }
-
-    const handleClick = () => {
-        setShow(!show);
-    };
 
     return (
         <Center>

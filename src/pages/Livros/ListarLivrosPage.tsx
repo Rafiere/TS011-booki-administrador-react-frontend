@@ -17,9 +17,10 @@ import {
 } from "@chakra-ui/react";
 import { Button, Card, Dropdown, FileUpload, InputText, InputTextarea, Menubar } from "primereact";
 import { useRef } from "react";
-import { getStorage } from "firebase/storage";
+import { getStorage, ref, uploadBytes } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 import firebase from "firebase/compat/app";
+import { auth, storage } from "../../config/firebase";
 
 type LivrosProps = {
     nome: string;
@@ -29,6 +30,9 @@ type LivrosProps = {
 export const ListarLivrosPage = () => {
     // const storage = firebase.storage();
     const { isOpen, onOpen, onClose } = useDisclosure();
+
+    var cover: File;
+    var epub: File;
 
     const menu = useRef(null);
     const items = [{}];
@@ -73,25 +77,16 @@ export const ListarLivrosPage = () => {
         }
     }
 
-    function handleFirebaseUpload() {
-        console.log("start of upload");
-        // async magic goes here...
-        // const uploadTask = storage.ref(`/images/${imageAsFile.name}`).put(imageAsFile);
-        //initiates the firebase side uploading
-        // uploadTask.on(
-        //     "state_changed",
-        //     () => {
-        //         // gets the functions from storage refences the image storage in firebase by the children
-        //         // gets the download url then sets the image from firebase as the value for the imgUrl key:
-        //         storage
-        //             .ref("images")
-        //             .child(imageAsFile.name)
-        //             .getDownloadURL()
-        //             .then(fireBaseUrl => {
-        //                 setImageAsUrl(prevObject => ({ ...prevObject, imgUrl: fireBaseUrl }));
-        //             });
-        //     },
-        // );
+    async function submit() {
+        const bearerToken = await auth.currentUser?.getIdToken();
+        // Post metadata to api and retrieve the ID
+        const bookId = "";
+
+        const coverRef = ref(storage, `/images/${bookId}.jpg`);
+        const epubRef = ref(storage, `/images/${bookId}.epub`);
+
+        uploadBytes(coverRef, cover);
+        uploadBytes(epubRef, epub);
     }
 
     return (
@@ -136,10 +131,9 @@ export const ListarLivrosPage = () => {
                                 </Text>
 
                                 <FileUpload
-                                    name="demo[]"
-                                    url="https://primefaces.org/primereact/showcase/upload.php"
-                                    onUpload={() => null}
-                                    multiple
+                                    name="cover"
+                                    onUpload={e => (cover = e.files[0])}
+                                    multiple={false}
                                     accept="image/*"
                                     maxFileSize={1000000}
                                     emptyTemplate={<p className="m-0">Envie a capa do livro aqui!</p>}
@@ -150,10 +144,9 @@ export const ListarLivrosPage = () => {
                                 </Text>
 
                                 <FileUpload
-                                    name="demo[]"
-                                    url="https://primefaces.org/primereact/showcase/upload.php"
-                                    onUpload={() => null}
-                                    multiple
+                                    name="epub"
+                                    onUpload={e => (epub = e.files[0])}
+                                    multiple={false}
                                     accept="image/*"
                                     maxFileSize={1000000}
                                     emptyTemplate={<p className="m-0">Envie o livro aqui!</p>}
@@ -193,7 +186,7 @@ export const ListarLivrosPage = () => {
 
             <SimpleGrid minChildWidth="240px" spacing="40px" className="mt-8">
                 {dados.map(livro => (
-                    <Box width={"240px"} textAlign={"center"} alignItems={"baseline"}>
+                    <Box key={livro.nome} width={"240px"} textAlign={"center"} alignItems={"baseline"}>
                         <Card>
                             <Image src={livro.capaUrl} />
                             <Text fontWeight="bold" paddingTop={6}>

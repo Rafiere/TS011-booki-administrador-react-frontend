@@ -1,6 +1,7 @@
 import { getAuth } from "firebase/auth";
 import "firebase/auth";
 import firebase from "firebase/compat/app";
+import { getStorage } from "firebase/storage";
 
 const app = firebase.initializeApp({
     apiKey: import.meta.env.VITE_REACT_FIREBASE_API_KEY,
@@ -12,7 +13,6 @@ const app = firebase.initializeApp({
     appId: import.meta.env.VITE_REACT_FIREBASE_APP_ID,
 });
 
-console.log(import.meta.env.REACT_FIREBASE_API_KEY);
-
 export const auth = getAuth(app);
+export const storage = getStorage(app);
 export default app;
